@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendeteksi Manusia</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- =========================
+     LANDING PAGE
+========================= -->
+<div id="landingPage" class="landing-page">
+
+  <div class="overlay"></div>
+
+  <div class="landing-content">
+
+    <!-- GANTI DENGAN LOGO KAMPUS -->
+    <img src="logo.png" class="logo" alt="Logo Kampus">
+
+    <h1>Pendeteksi Manusia</h1>
+
+    <h2>
+      Sistem Pendeteksi Manusia
+      Berbasis Artificial Intelligence
+    </h2>
+
+    <div class="info-box">
+      <p><strong>Universitas Bina Sarana Informatika</strong></p>
+      <p>Teknik Informatika</p>
+      
+    </div>
+
+    <button class="enter-btn" onclick="enterSystem()">
+      Masuk Ke Sistem
+    </button>
+
+  </div>
+</div>
+
+<!-- =========================
+     MAIN APP
+========================= -->
+<div id="mainApp" class="hidden">
+
+<header>
+  <h2>Dashboard Pendeteksi Manusia</h2>
+</header>
+
+<div class="container">
+
+  <!-- VIDEO AREA -->
+  <div class="video-box">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard">
+
+    <h2>Monitor</h2>
+
+    <div class="card">
+      <h1 id="count">0</h1>
+      <p>Jumlah Orang</p>
+    </div>
+
+    <div class="card">
+      <p id="status">Ruangan kosong</p>
+    </div>
+
+    <div class="card">
+      <p id="clock"></p>
+    </div>
+
+    <button onclick="start()">Start Camera</button>
+    <button onclick="stop()" disabled>Stop Camera</button>
+
+    <h3>Riwayat</h3>
+    <ul id="logList"></ul>
+
+    <button onclick="clearHistory()">Clear History</button>
+
+  </div>
+</div>
+
+</div>
+
+<!-- Modal Konfirmasi -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <p>Yakin mau hapus semua riwayat?</p>
+    <button onclick="confirmClear()">Ya</button>
+    <button onclick="closeModal()">Batal</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
