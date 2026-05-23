@@ -72,17 +72,22 @@ async function start() {
     return;
   }
 
-  // Aktifkan izin suara di HP
   speak('Sistem siap mendeteksi manusia');
 
-  stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      width: { ideal: 640, max: 640 },
-      height: { ideal: 480, max: 480 },
-      facingMode: "environment"
-    },
-    audio: false
-  });
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: "environment" },
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
+      audio: false
+    });
+  } catch (error) {
+    console.error("Kamera gagal:", error);
+    alert("Kamera gagal dibuka. Pastikan izin kamera di browser sudah diaktifkan.");
+    return;
+  }
 
   video.srcObject = stream;
 
@@ -92,6 +97,7 @@ async function start() {
   document.querySelector('button[onclick="stop()"]').disabled = false;
 
   video.onloadedmetadata = () => {
+    video.play();
     detect();
   };
 }
