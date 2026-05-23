@@ -15,22 +15,18 @@ const ctx = canvas.getContext('2d');
 // MASUK KE SISTEM
 // =========================
 function enterSystem() {
-
   const landing = document.getElementById('landingPage');
 
   landing.style.opacity = '0';
-
   landing.style.transition = '1s';
 
   setTimeout(() => {
-
     landing.style.display = 'none';
 
     document.getElementById('mainApp')
       .classList.remove('hidden');
 
     document.body.style.overflow = 'auto';
-
   }, 1000);
 }
 
@@ -38,11 +34,14 @@ function enterSystem() {
 // SUARA
 // =========================
 function speak(text) {
+  if (!window.speechSynthesis) return;
 
-  const msg = new SpeechSynthesisUtterance();
+  const msg = new SpeechSynthesisUtterance(text);
 
-  msg.text = text;
   msg.lang = 'id-ID';
+  msg.rate = 1;
+  msg.pitch = 1;
+  msg.volume = 1;
 
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(msg);
@@ -52,14 +51,11 @@ function speak(text) {
 // LOAD MODEL
 // =========================
 async function loadModel() {
-
-  document.getElementById('status').textContent =
-    'Loading AI...';
+  document.getElementById('status').textContent = 'Loading AI...';
 
   model = await cocoSsd.load();
 
-  document.getElementById('status').textContent =
-    'AI siap digunakan';
+  document.getElementById('status').textContent = 'AI siap digunakan';
 
   document.querySelector('button[onclick="start()"]')
     .disabled = false;
@@ -71,18 +67,21 @@ async function loadModel() {
 // START CAMERA
 // =========================
 async function start() {
-
   if (!model) {
     alert("AI belum siap");
     return;
   }
+
+  // Aktifkan izin suara di HP
+  speak('Sistem siap mendeteksi manusia');
 
   stream = await navigator.mediaDevices.getUserMedia({
     video: {
       width: { ideal: 640, max: 640 },
       height: { ideal: 480, max: 480 },
       facingMode: "environment"
-    }
+    },
+    audio: false
   });
 
   video.srcObject = stream;
@@ -90,7 +89,6 @@ async function start() {
   running = true;
 
   document.querySelector('button[onclick="start()"]').disabled = true;
-
   document.querySelector('button[onclick="stop()"]').disabled = false;
 
   video.onloadedmetadata = () => {
@@ -102,7 +100,6 @@ async function start() {
 // STOP CAMERA
 // =========================
 function stop() {
-
   running = false;
 
   if (stream) {
@@ -114,11 +111,9 @@ function stop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   document.getElementById('count').textContent = 0;
-
   document.getElementById('status').textContent = 'Kamera berhenti';
 
   document.querySelector('button[onclick="start()"]').disabled = false;
-
   document.querySelector('button[onclick="stop()"]').disabled = true;
 }
 
@@ -126,7 +121,6 @@ function stop() {
 // DETECT
 // =========================
 async function detect() {
-
   if (!running) return;
 
   canvas.width = video.videoWidth;
@@ -141,12 +135,10 @@ async function detect() {
   );
 
   people.forEach(p => {
-
     const [x, y, w, h] = p.bbox;
 
     ctx.strokeStyle = 'lime';
     ctx.lineWidth = 2;
-
     ctx.strokeRect(x, y, w, h);
 
     ctx.fillStyle = 'lime';
@@ -162,12 +154,9 @@ async function detect() {
   const count = people.length;
 
   if (count !== lastCount) {
-
     if (count === 1) {
       speak('Terdeteksi satu orang');
-    }
-
-    else if (count > 1) {
+    } else if (count > 1) {
       speak(`Terdeteksi ${count} orang`);
     }
   }
@@ -175,7 +164,6 @@ async function detect() {
   const now = Date.now();
 
   if (now - lastSavedTime > SAVE_INTERVAL) {
-
     const time = new Date().toLocaleTimeString();
 
     historyData.push({
@@ -184,7 +172,6 @@ async function detect() {
     });
 
     renderHistory();
-
     lastSavedTime = now;
   }
 
@@ -196,9 +183,7 @@ async function detect() {
 
   if (count === 1) {
     statusText = '1 orang terdeteksi';
-  }
-
-  else if (count > 1) {
+  } else if (count > 1) {
     statusText = `${count} orang terdeteksi`;
   }
 
@@ -211,38 +196,31 @@ async function detect() {
 // HISTORY
 // =========================
 function renderHistory() {
-
   const list = document.getElementById('logList');
 
   list.innerHTML = '';
 
   historyData.slice().reverse().forEach(item => {
-
     const li = document.createElement('li');
 
-    li.textContent =
-      `${item.time} - ${item.count} orang`;
+    li.textContent = `${item.time} - ${item.count} orang`;
 
     list.appendChild(li);
   });
 }
 
 function clearHistory() {
-
   document.getElementById('confirmModal').style.display = 'flex';
 }
 
 function closeModal() {
-
   document.getElementById('confirmModal').style.display = 'none';
 }
 
 function confirmClear() {
-
   historyData = [];
 
   renderHistory();
-
   closeModal();
 }
 
@@ -250,7 +228,6 @@ function confirmClear() {
 // JAM
 // =========================
 function updateClock() {
-
   const now = new Date();
 
   document.getElementById('clock').textContent =
