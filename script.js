@@ -138,7 +138,7 @@ async function detect() {
   const predictions = await model.detect(video);
 
   const people = predictions.filter(p =>
-    p.class === 'person' && p.score > 0.6
+    p.class === 'person' && p.score > 0.35
   );
 
   people.forEach(p => {
