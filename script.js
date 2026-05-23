@@ -53,7 +53,16 @@ function speak(text) {
 // =========================
 async function loadModel() {
 
+  document.getElementById('status').textContent =
+    'Loading AI...';
+
   model = await cocoSsd.load();
+
+  document.getElementById('status').textContent =
+    'AI siap digunakan';
+
+  document.querySelector('button[onclick="start()"]')
+    .disabled = false;
 
   console.log("AI Loaded");
 }
