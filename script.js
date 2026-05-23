@@ -76,11 +76,7 @@ async function start() {
 
   try {
     stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: "environment" },
-        width: { ideal: 640 },
-        height: { ideal: 480 }
-      },
+      video: true,
       audio: false
     });
   } catch (error) {
@@ -90,15 +86,14 @@ async function start() {
   }
 
   video.srcObject = stream;
-  await video.play();
 
   running = true;
 
   document.querySelector('button[onclick="start()"]').disabled = true;
   document.querySelector('button[onclick="stop()"]').disabled = false;
 
-  video.onloadedmetadata = () => {
-    video.play();
+  video.onloadedmetadata = async () => {
+    await video.play();
     detect();
   };
 }
@@ -138,7 +133,7 @@ async function detect() {
   const predictions = await model.detect(video);
 
   const people = predictions.filter(p =>
-    p.class === 'person' && p.score > 0.35
+    p.class === 'person' && p.score > 0.6
   );
 
   people.forEach(p => {
