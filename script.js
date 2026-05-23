@@ -90,6 +90,7 @@ async function start() {
   }
 
   video.srcObject = stream;
+  await video.play();
 
   running = true;
 
