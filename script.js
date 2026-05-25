@@ -75,15 +75,17 @@ async function start() {
   speak('Sistem siap mendeteksi manusia');
 
   try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false
-    });
-  } catch (error) {
-    console.error("Kamera gagal:", error);
-    alert("Kamera gagal dibuka. Pastikan izin kamera di browser sudah diaktifkan.");
-    return;
-  }
+  stream = await navigator.mediaDevices.getUserMedia({
+    video: {
+      facingMode: { ideal: "environment" }
+    },
+    audio: false
+  });
+} catch (error) {
+  console.error("Kamera gagal:", error);
+  alert("Kamera gagal dibuka. Pastikan izin kamera di browser sudah diaktifkan.");
+  return;
+}
 
   video.srcObject = stream;
 
